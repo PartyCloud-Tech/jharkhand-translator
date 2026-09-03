@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jharkhand Language Bridge</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark">ज</span><div><p class="kicker">Community language lab</p><h1>Jharkhand <em>Language Bridge</em></h1></div></div>
+      <div class="status"><span class="status-dot"></span> Offline prototype</div>
+    </header>
+
+    <section class="intro">
+      <div><p class="eyebrow">Hindi / English → Santali</p><h2>Words that travel<br><span>closer to home.</span></h2></div>
+      <p class="intro-copy">A small, human-reviewed phrasebook for everyday conversations. Built to grow with local speakers.</p>
+    </section>
+
+    <section class="translator" aria-label="Translator">
+      <div class="language-row"><button class="lang active" data-lang="source">Hindi / English</button><button class="swap" id="swapBtn" title="Swap languages" aria-label="Swap languages">⇄</button><button class="lang" data-lang="target">Santali · Ol Chiki</button></div>
+      <div class="workbench">
+        <div class="panel source-panel"><div class="panel-head"><span>Source</span><div><button id="micBtn" class="mic-btn" title="Speak phrase" aria-label="Speak phrase">● Speak</button><button id="clearBtn" class="text-btn">Clear</button></div></div><textarea id="sourceText" placeholder="Type or choose a phrase…" aria-label="Source text"></textarea><div class="source-foot"><span id="detected">Language detected automatically</span><span id="charCount">0 / 160</span></div></div>
+        <div class="panel result-panel"><div class="panel-head"><span>Translation</span><span class="verified">✓ Community checked</span></div><div id="resultText" class="result-text">ᱵᱟᱝ ᱟᱢ ᱠᱟᱹᱢᱤ ᱫᱚ?</div><div class="transliteration" id="translit">Bang am kãmi do?</div><div class="result-foot"><span class="confidence"><i></i>High confidence</span><button id="copyBtn" class="copy-btn">Copy result</button></div></div>
+      </div>
+      <div class="hint">Try a phrase below to see the bridge in action.</div>
+    </section>
+
+    <section class="phrase-section"><div class="section-title"><div><p class="eyebrow">Phrasebook</p><h3>Start with something familiar</h3></div><span class="phrase-count">8 phrases · demo set</span></div><div class="phrases" id="phrases"></div></section>
+    <footer><span>Prototype for community review</span><span>Next: Mundari · Ho · Kurukh</span></footer>
+  </main>
+  <div id="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>
