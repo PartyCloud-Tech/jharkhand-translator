@@ -15,6 +15,8 @@ const translit = document.querySelector('#translit');
 const charCount = document.querySelector('#charCount');
 const detected = document.querySelector('#detected');
 const toast = document.querySelector('#toast');
+const phraseSearch = document.querySelector('#phraseSearch');
+const phraseCount = document.querySelector('#phraseCount');
 let reverse = false;
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 const micBtn = document.querySelector('#micBtn');
@@ -25,9 +27,15 @@ if (SpeechRecognition) {
   recognition.interimResults = false;
   recognition.lang = 'en-IN';
   micBtn.addEventListener('click', () => {
-    recognition.start();
-    micBtn.textContent = '● Listening…';
-    micBtn.classList.add('listening');
+    try {
+      recognition.start();
+      micBtn.textContent = '● Listening…';
+      micBtn.classList.add('listening');
+    } catch {
+      toast.textContent = 'Voice input is already starting. Try again in a moment.';
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2600);
+    }
   });
   recognition.onresult = event => {
     sourceText.value = event.results[0][0].transcript;
@@ -38,10 +46,16 @@ if (SpeechRecognition) {
     micBtn.textContent = '● Speak';
     micBtn.classList.remove('listening');
   };
-  recognition.onerror = () => {
+  recognition.onerror = event => {
     micBtn.textContent = '● Speak';
     micBtn.classList.remove('listening');
-    toast.textContent = 'Microphone access was unavailable';
+    const messages = {
+      'not-allowed': 'Microphone permission was denied. Allow it in your browser settings.',
+      'audio-capture': 'No microphone was found. Check that one is connected and enabled.',
+      'network': 'Voice recognition needs a network connection in this browser.',
+      'service-not-allowed': 'Voice recognition is blocked by this browser or device.'
+    };
+    toast.textContent = messages[event.error] || 'Microphone access was unavailable';
     toast.classList.add('show');
     setTimeout(() => toast.classList.remove('show'), 2200);
   };
@@ -52,7 +66,13 @@ if (SpeechRecognition) {
 }
 
 function renderPhrases() {
-  document.querySelector('#phrases').innerHTML = phrases.map((phrase, index) => `
+  const query = phraseSearch.value.trim().toLowerCase();
+  const visiblePhrases = phrases
+    .map((phrase, index) => ({ phrase, index }))
+    .filter(({ phrase }) => !query || [phrase.en, phrase.hi, phrase.latin, phrase.tag]
+      .some(text => text.toLowerCase().includes(query)));
+  phraseCount.textContent = `${visiblePhrases.length} of ${phrases.length} phrases`;
+  document.querySelector('#phrases').innerHTML = visiblePhrases.map(({ phrase, index }) => `
     <button class="phrase" data-index="${index}">
       <strong>${phrase.en}</strong><small>${phrase.latin}</small><div class="phrase-tag">${phrase.tag}</div>
     </button>`).join('');
@@ -82,14 +102,15 @@ function translateInput() {
   const phrase = findPhrase(sourceText.value);
   if (phrase) showTranslation(phrase);
   else {
-    resultText.textContent = 'Phrase not in demo set';
-    translit.textContent = 'Add a community-reviewed translation next';
-    detected.textContent = 'Try one of the phrasebook examples';
+    resultText.textContent = 'Not in the language library yet';
+    translit.textContent = 'This sentence needs a reviewed Santali translation';
+    detected.textContent = 'Search the phrase library or add reviewed data';
   }
 }
 
 function updateCount() { charCount.textContent = `${sourceText.value.length} / 160`; }
 sourceText.addEventListener('input', () => { updateCount(); translateInput(); });
+phraseSearch.addEventListener('input', renderPhrases);
 document.querySelector('#clearBtn').addEventListener('click', () => { sourceText.value = ''; updateCount(); showTranslation(phrases[0]); detected.textContent = 'Language detected automatically'; sourceText.focus(); });
 document.querySelector('#swapBtn').addEventListener('click', () => {
   reverse = !reverse;
