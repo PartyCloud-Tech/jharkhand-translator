@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Abyssal Scan | Marine Anomaly Detection</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div class="brand"><div class="brand-mark">AS</div><div><p class="overline">Edge vision / survey console</p><h1>Abyssal <span>Scan</span></h1></div></div>
+      <div class="top-meta"><span class="status-dot"></span><span>LOCAL RUNTIME</span><b id="runtimeStatus">READY</b><span class="version">v0.1 prototype</span></div>
+    </header>
+
+    <section class="hero-row">
+      <div><p class="overline coral">Side-scan sonar intelligence</p><h2>Find what the<br><i>water hides.</i></h2></div>
+      <p class="hero-copy">A compact, operator-first scan pipeline for locating marine debris and unusual seabed signatures without a cloud connection.</p>
+      <div class="hero-stat"><strong id="scanCount">01</strong><span>active scan</span></div>
+    </section>
+
+    <section class="control-strip" aria-label="Scan controls">
+      <div class="control-block"><label for="sceneSelect">Input scene</label><select id="sceneSelect"><option value="ghost-net">Ghost net field</option><option value="pipe">Pipeline fragment</option><option value="wreckage">Wreckage cluster</option><option value="clean-seabed">Clean seabed</option></select></div>
+      <div class="control-block"><label for="sensitivity">Detection sensitivity <output id="sensitivityValue">58%</output></label><input id="sensitivity" type="range" min="25" max="85" value="58"></div>
+      <div class="control-block"><label for="preprocess">Preprocessing</label><select id="preprocess"><option value="balanced">Balanced denoise</option><option value="detail">Detail recovery</option><option value="smooth">Strong denoise</option></select></div>
+      <button id="runBtn" class="run-btn">Run analysis <span>→</span></button>
+    </section>
+
+    <section class="workspace">
+      <div class="visual-column">
+        <div class="panel-title"><div><span class="section-index">01</span><h3>Sonar return</h3></div><span class="live-label"><i></i> ANALYSIS VIEW</span></div>
+        <div class="sonar-frame" id="dropZone"><canvas id="sonarCanvas" width="960" height="560" aria-label="Side-scan sonar image with detected anomalies"></canvas><div class="scan-line"></div><div class="drop-hint"><strong>Drop a sonar image here</strong><span>or <button id="uploadBtn">browse local files</button></span></div><div class="frame-corner top-left"></div><div class="frame-corner bottom-right"></div></div>
+        <div class="image-footer"><span id="imageName">Sample / ghost-net-field.sonar</span><span id="imageMeta">960 × 560 px · 8-bit grayscale</span><span id="processingTime">Processed in 42 ms</span></div>
+      </div>
+      <aside class="results-column">
+        <div class="panel-title"><div><span class="section-index">02</span><h3>Detection log</h3></div><button id="resetBtn" class="icon-btn" title="Reset to sample scene" aria-label="Reset to sample scene">↻</button></div>
+        <div class="summary"><div><strong id="anomalyCount">03</strong><span>anomalies found</span></div><div><strong id="meanConfidence">87%</strong><span>mean confidence</span></div></div>
+        <div id="results" class="results" aria-live="polite"></div>
+        <div class="legend"><p class="overline">Confidence bands</p><div><span><i class="high"></i>High · 80–100</span><span><i class="medium"></i>Review · 55–79</span></div></div>
+      </aside>
+    </section>
+
+    <section class="pipeline"><div class="pipeline-heading"><p class="overline coral">Transparent pipeline</p><span>Every result is operator-reviewable</span></div><div class="pipeline-steps"><div class="step done"><b>01</b><strong>Ingest</strong><span>Local image</span></div><div class="step done"><b>02</b><strong>Clean</strong><span>Denoise + normalize</span></div><div class="step active"><b>03</b><strong>Detect</strong><span>Feature scoring</span></div><div class="step"><b>04</b><strong>Review</strong><span>Confirm target</span></div></div></section>
+    <footer><span>Prototype detector uses explainable image heuristics</span><span>Not a navigation or safety system · human review required</span></footer>
+  </main>
+  <input id="fileInput" type="file" accept="image/png,image/jpeg,image/webp,image/bmp" hidden>
+  <div id="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>

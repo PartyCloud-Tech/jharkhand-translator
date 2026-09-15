@@ -1,0 +1,13 @@
+{
+  "name": "marine-debris-detector",
+  "version": "0.1.0",
+  "description": "Offline side-scan sonar anomaly detection prototype",
+  "main": "electron-main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^38.1.0"
+  }
+}
